@@ -114,8 +114,9 @@ class SVGWriter:
 
         # Loop through all defined elements to beb added
         for tag, data in self.svg_data.items():
-            for i in range(len(data)):
-                self.write_line(self.tag(tag, data[i],
+            for _data in data):
+                if _data.get("_")
+                self.write_line(self.tag(tag, _data,
                                 closing=False, closed=True))
 
         # Close svg tag
@@ -161,6 +162,12 @@ class SVGWriter:
             "r": qt(r),
         })
 
+
+
+
+    def animate(self, element):
+        pass
+
 def main():
     svg = SVGWriter("new.svg")
 
@@ -170,6 +177,7 @@ def main():
         svg.line(svg.height, 100, 0, svg.width, "stroke: black; stroke-width: 6;")
         svg.circle(100, svg.height / 2, 50)
         svg.circle(svg.height - 100, svg.height / 2, 50)
+        svg.animate()
         svg.compile_svg()
 
 
