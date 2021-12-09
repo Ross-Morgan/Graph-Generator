@@ -123,12 +123,19 @@ class SVGWriter:
         self.write_line(self.tag("svg", self.svg_data["svg"],
                         closing=False, closed=False))
 
+        # Remove svg tag from data
         del self.svg_data["svg"]
 
+        # Loop through all defined elements to beb added
         for tag, data in self.svg_data.items():
             if type(data) == str:
-                self.write_line(self.tag(tag, self.svg_data[tag],
+                self.write_line(self.tag(tag, data,
                                 closing=False, closed=True))
+
+            else:
+                for i, _ in enumerate(data):
+                    self.write_line(self.tag(tag, data[i],
+                                    closing=False, closed=True))
 
         # Close svg tag
         self.write_line(self.tag("svg", closing=True))
@@ -160,16 +167,15 @@ class SVGWriter:
 
 def main():
     svg = SVGWriter("new.svg")
-    svg.init_svg(960, 540)
 
-    # svg.add_element("line")
+    with svg:
+        svg.init_svg(960, 540)
+        svg.line(100, 100, 860, 440, "stroke: black; stroke-width: 6;")
+        svg.compile_svg()
 
 
 if __name__ == "__main__":
-    # main()
     svg = SVGWriter("new.svg")
-    # print(svg.tag("svg", {"width":200, "height":100}, True))
-    print(svg.tag("svg", closing=True))
 
     with svg:
         svg.init_svg(200, 200)
