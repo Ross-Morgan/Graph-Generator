@@ -1,11 +1,6 @@
-import logging
-import json  # !Remove after debugging
-
+import json
 
 DEFAULT_MODE = "w+"
-FILE_FMT = "%(asctime)s - %(message)s"
-DATE_FMT = "%d-%m-%Y %H:%M:%S"
-LEVEL = logging.ERROR
 TAB = "    "
 
 _CONTEXT_ERR_MSG = \
@@ -13,9 +8,6 @@ _CONTEXT_ERR_MSG = \
 
 
 coords = tuple[float, float]
-
-
-logging.basicConfig(format=FILE_FMT, datefmt=DATE_FMT, level=LEVEL)
 
 
 def qt(s) -> str:
@@ -28,8 +20,8 @@ def context(strict: bool = False):
         def wrapper(self, *args, **kwargs):
             if not self.in_context:
                 if strict:
-                    raise NotInContext("")
-                logging.warning()
+                    raise NotInContext(_CONTEXT_ERR_MSG.format(func.__name__))
+                print(_CONTEXT_ERR_MSG.format(func.__name__))
             return func(self, *args, **kwargs)
         return wrapper
     return inner
@@ -43,18 +35,6 @@ class NotInContext(Exception):
 
     def __str__(self):
         return f"{self.err}({self.msg})"
-
-
-class Point:
-    def __init__(self, x: float, y: float):
-        self.x = x
-        self.y = y
-
-    @property
-    def coords(self): return (self.x, self.y)
-
-    def __iter__(self):
-        return iter(self.coords)
 
 
 class SVGWriter:
@@ -84,7 +64,7 @@ class SVGWriter:
 
             if ensure:
                 raise NotInContext(_CONTEXT_ERR_MSG.format(func.__name__))
-            logging.error(_CONTEXT_ERR_MSG.format(func.__name__))
+            print(_CONTEXT_ERR_MSG.format(func.__name__))
 
     def ensure_context(self, func):
         self.check_context(func, ensure=True)
