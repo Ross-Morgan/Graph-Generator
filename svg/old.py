@@ -175,9 +175,4 @@ def main():
 
 
 if __name__ == "__main__":
-    svg = SVGWriter("new.svg")
-
-    with svg:
-        svg.init_svg(200, 200)
-        svg.line(10, 10, 190, 190)
-        svg.compile_svg()
+    main()
