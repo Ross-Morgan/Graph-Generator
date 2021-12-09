@@ -47,6 +47,8 @@ class SVGWriter:
         self.unclosed_tags = []
         self.indent = 0
 
+        self.width, self.height = 0, 0
+
         open(filepath, DEFAULT_MODE)  # Create file but don't store / read
 
     def __enter__(self):
@@ -121,6 +123,7 @@ class SVGWriter:
         self.write_line(self.tag("svg", closing=True))
 
     def init_svg(self, width: int, height: int):
+        self.width, self.height = width, height
         self.add_element("svg", {
             "xmlns": '"http://www.w3.org/2000/svg"',
             "xmlns:ev": '"http://www.w3.org/2001/xml-events"',
@@ -133,9 +136,7 @@ class SVGWriter:
 
     def line(self, x1: int, y1: int,
              x2: int, y2: int,
-             style: str = "stroke: black;"
-             ):
-
+             style: str = "stroke: black;"):
         self.add_element("line", {
             "x1": qt(x1),
             "y1": qt(y1),
@@ -144,14 +145,31 @@ class SVGWriter:
             "style": qt(style),
         })
 
+    def rect(self, width: int, height: int,
+             style: str = "stroke: black; stroke-width: 6; fill: #646464"):
+        self.add_element("rect", {
+            "width": qt(width),
+            "height": qt(height),
+            "style": qt(style),
+        })
+
+    def circle(self, cx: int, cy: int, r: int,
+               style):
+        self.add_element("circle", {
+            "cx": qt(x),
+            "cy": qt(y),
+            "r": qt(r),
+        })
 
 def main():
     svg = SVGWriter("new.svg")
 
     with svg:
         svg.init_svg(960, 540)
-        svg.line(100, 100, 860, 440, "stroke: black; stroke-width: 6;")
-        svg.line(860, 100, 100, 440, "stroke: black; stroke-width: 6;")
+        svg.line(0, 100, self.width, self.height, "stroke: black; stroke-width: 6;")
+        svg.line(svg.height, 100, 0, svg.width, "stroke: black; stroke-width: 6;")
+        svg.circle(100, svg.height / 2, 50)
+        svg.circle(svg.height - 100, svg.height / 2, 50)
         svg.compile_svg()
 
 

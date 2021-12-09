@@ -66,7 +66,7 @@ def main():
     TITLE = "Graph Generator"
     ICON = QtGui.QIcon("Assets/graph.png")
 
-    window = MainWindow((WIDTH, HEIGHT), TITLE, ICON)
+    windows = MainWindow((WIDTH, HEIGHT), TITLE, ICON)
     window.show()
 
     app.exec()
